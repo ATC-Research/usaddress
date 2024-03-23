@@ -218,7 +218,7 @@ def tokenize(address_string):
     return tokens
 
 
-def token_features(token):
+def token_to_features(token):
     if token in (u'&', u'#', u'½'):
         token_clean = token
     else:
@@ -250,11 +250,11 @@ def token_features(token):
 
 
 def tokens2features(address):
-    feature_sequence = [token_features(address[0])]
+    feature_sequence = [token_to_features(address[0])]
     previous_features = feature_sequence[-1].copy()
 
     for token in address[1:]:
-        token_features = token_features(token)
+        token_features = token_to_features(token)
         current_features = token_features.copy()
 
         feature_sequence[-1]['next'] = current_features
