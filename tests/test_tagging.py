@@ -1,9 +1,9 @@
-import unittest
+from collections import OrderedDict
+
 import usaddress
 
 
-class TestTagging(unittest.TestCase):
-
-    def test_broadway(self):
-        s1 = '1775 Broadway And 57th, Newyork NY'
-        usaddress.tag(s1)
+def test_broadway():
+    s1 = '1775 Broadway And 57th, Newyork NY'
+    assert usaddress.tag(s1)[0] == OrderedDict(
+        [('AddressNumber', '1775'), ('StreetName', 'Broadway And 57th'), ('PlaceName', 'Newyork'), ('StateName', 'NY')])

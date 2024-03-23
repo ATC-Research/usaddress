@@ -1,5 +1,9 @@
 nose
 parserator>=0.3
-requests
+requests~=2.31.0
 coverage
 flake8
+pytest~=8.1.1
+setuptools~=69.1.0
+probableparsing~=0.0.1
+lxml~=5.1.0

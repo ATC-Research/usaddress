@@ -2,19 +2,17 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from builtins import zip
-from builtins import str
-import os
-import string
-import re
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
-import warnings
 
-import pycrfsuite
+import os
+import re
+import string
+import warnings
+from builtins import str
+from builtins import zip
+from collections import OrderedDict
+
 import probableparsing
+import pycrfsuite
 
 # The address components are based upon the `United States Thoroughfare,
 # Landmark, and Postal Address Data Standard
@@ -55,10 +53,8 @@ GROUP_LABEL = 'AddressCollection'
 MODEL_FILE = 'usaddr.crfsuite'
 MODEL_PATH = os.path.split(os.path.abspath(__file__))[0] + '/' + MODEL_FILE
 
-DIRECTIONS = set(['n', 's', 'e', 'w',
-                  'ne', 'nw', 'se', 'sw',
-                  'north', 'south', 'east', 'west',
-                  'northeast', 'northwest', 'southeast', 'southwest'])
+DIRECTIONS = {'n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw', 'north', 'south', 'east', 'west', 'northeast', 'northwest',
+              'southeast', 'southwest'}
 
 STREET_NAMES = {
     'allee', 'alley', 'ally', 'aly', 'anex', 'annex', 'annx', 'anx',
@@ -133,7 +129,6 @@ STREET_NAMES = {
     'walks', 'wall', 'way', 'ways', 'well', 'wells', 'wl', 'wls', 'wy', 'xc',
     'xg', 'xing', 'xrd', 'xrds'
 }
-
 
 try:
     TAGGER = pycrfsuite.Tagger()
@@ -223,7 +218,7 @@ def tokenize(address_string):
     return tokens
 
 
-def tokenFeatures(token):
+def token_features(token):
     if token in (u'&', u'#', u'½'):
         token_clean = token
     else:
@@ -237,7 +232,7 @@ def tokenFeatures(token):
         'word': (token_abbrev
                  if not token_abbrev.isdigit()
                  else False),
-        'trailing.zeros': (trailingZeros(token_abbrev)
+        'trailing.zeros': (trailing_zeros(token_abbrev)
                            if token_abbrev.isdigit()
                            else False),
         'length': (u'd:' + str(len(token_abbrev))
@@ -255,11 +250,11 @@ def tokenFeatures(token):
 
 
 def tokens2features(address):
-    feature_sequence = [tokenFeatures(address[0])]
+    feature_sequence = [token_features(address[0])]
     previous_features = feature_sequence[-1].copy()
 
     for token in address[1:]:
-        token_features = tokenFeatures(token)
+        token_features = token_features(token)
         current_features = token_features.copy()
 
         feature_sequence[-1]['next'] = current_features
@@ -288,7 +283,7 @@ def digits(token):
         return 'no_digits'
 
 
-def trailingZeros(token):
+def trailing_zeros(token):
     results = re.findall(r'(0+)$', token)
     if results:
         return results[0]
